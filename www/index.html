@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="lobster-app">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Lobster</title>
+        <script src="js/config.js"></script>
+        <script src="js/jquery-1.12.4.min.js"></script>
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-route.min.js"></script>
+    </head>
+    <body ng-controller="lobsterCtrl">
+    <ng-view></ng-view>
+    	
+<!--
+      <h4>Координаты</h4>
+      <div>Широта: <span id='lat'></span></div>
+      <div>Долгота: <span id="lon"></span></div>
+
+
+
+    	   <script>
+         
+    var options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };
+
+    var onSuccess = function(position) {
+      document.getElementById('lat').innerHTML = position.coords.latitude;
+      document.getElementById('lon').innerHTML = position.coords.longitude;
+    };
+
+
+    function onError(error) {
+
+              ajax();
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+
+
+
+
+
+
+
+
+         
+
+function ajax(){
+  $.ajax({ url: "http://rostanets.zzz.com.ua/application/geolocation/",
+                                // The name of the callback parameter, as specified by the YQL service
+                    jsonp: "callback",
+                     
+                                // Tell jQuery we're expecting JSONP
+                                dataType: "jsonp",
+                     
+                                success: function( response ) {
+                                    $('#lat').text( response["lat"] );
+                                    $('#lon').text( response["lon"] );
+                                }
+                              });
+
+}
+          
+
+
+
+         
+
+        </script>
+        -->
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/lobster.js"></script>
+    </body>
+</html>
