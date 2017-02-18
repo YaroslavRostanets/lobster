@@ -1,9 +1,9 @@
 lobster.config(function($routeProvider){
-	$routeProvider.when('/auth',
+	$routeProvider.when('/',
         {
             template:'<auth-comp></auth-comp>',
         });
-	$routeProvider.when('/',
+	$routeProvider.when('/search',
 	{
             template:'<div id="search">' + 
 						'<div id="top-but">' + 
