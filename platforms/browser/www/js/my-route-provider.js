@@ -1,9 +1,16 @@
+
+
 lobster.config(function($routeProvider){
+    $routeProvider.when('/',
+        {
+            template:'<h3 style="text-align: center; margin-top: 50px; margin-bottom: 50px;">I love u, creator</h3>' +
+				'<a href="javascript:void(0);" onclick="window.localStorage.clear();">Очистить Storage</a>'
+        });
 	$routeProvider.when('/auth',
         {
             template:'<auth-comp></auth-comp>',
         });
-	$routeProvider.when('/',
+	$routeProvider.when('/search',
 	{
             template:'<div id="search">' + 
 						'<div id="top-but">' + 

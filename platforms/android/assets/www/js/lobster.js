@@ -1,8 +1,5 @@
 var lobster = angular.module("lobster-app", ['ngRoute']);
 
-
-
-
 lobster.config(function($sceDelegateProvider) {
 	$sceDelegateProvider.resourceUrlWhitelist([    // Allow same origin resource loads.
     'self',
@@ -14,6 +11,14 @@ lobster.config(function($sceDelegateProvider) {
 lobster.controller("lobsterCtrl",function($scope, myFactory){
 	$scope.myFactory = myFactory;
 
+        setTimeout(function(){
+            if( window.localStorage.getItem("vk_access_token") !== null ){
+                window.location.hash = "#!/search";
+            } else {
+                window.location.hash = "#!/auth";
+            }
+        },3000);
+
 	
 });
 
@@ -21,7 +26,7 @@ lobster.component("authComp", {
 	template: "<h4>Шаблон страницы авторизации</h4><a href='javascript:void(0)' ng-click='auth();'>Авторизация ВК</a>" + 
 				'<div><a href="#" ng-click="myFactory.logout();">logout</a></div>' + 
 				'<p>token - {{token}}</p><p>userId - {{userId}}</p>' + 
-				'<a href="#" ng-click="authTest();"> SERVER TEST </a>',
+				'<a href="javascript:void(0)" ng-click="authTest();"> SERVER TEST </a>',
 
 	controller: function($scope, myFactory, $http, $sce){
 		$scope.myFactory = myFactory;
@@ -43,37 +48,45 @@ lobster.component("authComp", {
 						}
 						window.localStorage.setItem("vk_access_token", outData[0]);
 						window.localStorage.setItem("vk_expires_in", outData[1]);
-						window.localStorage.setItem("vk_user_id", outData[2]);	
-						
+						window.localStorage.setItem("vk_user_id", outData[2]);
+						window.localStorage.setItem("email", outData[3]);
+
+                        $scope.userId = window.localStorage.getItem("vk_user_id");
+                        $scope.token = window.localStorage.getItem("vk_access_token");
+                        $scope.vk_expires_in = window.localStorage.getItem("vk_expires_in");
+                        $scope.email = window.localStorage.getItem("email");
     				uri.close();
+
+                        var getParams = {
+                            'vk_user_id': $scope.userId,
+                            'vk_access_token': $scope.token,
+                            'email': $scope.email
+                        }
+
+                        var getStr = lobsterUrl + '/auth/?';  // lobsterUrl = 'http://rostanets.zzz.com.ua/application'
+                        for( var key in getParams ){
+                            getStr += key + '=' + getParams[key] + '&';
+                        }
+
+
+                        $http.jsonp(getStr).then(function(response) {
+                            alert(response.data.status);
+                            window.location.hash = "#!/search";
+                        });
+
     			}
     		});
-    			$scope.userId = window.localStorage.getItem("vk_user_id");
-    			$scope.token = window.localStorage.getItem("vk_access_token");
-    			$scope.vk_expires_in = window.localStorage.getItem("vk_expires_in");
-
-    			var getParams = {
-    				'vk_user_id': $scope.userId,
-    				'vk_access_token': $scope.token
-    			}
-    			var getStr ='';
-    			for( var key in getParams ){
-    				getStr += key + '=' + getParams[key] + '&';
-    			}
 
 
-    			$http.jsonp({
-    				method: 'GET', 
-    				url: lobsterUrl + '/auth/?' + getStr})
-    				.success(function(data) {
-    					alert(data);
-    				});
+
+
+
     			
-    		}
+    		},
 
     	$scope.authTest = function(){
     		var getParams = {
-    				'vk_user_id': '676767',
+    				'vk_user_id': '84',
     				'vk_access_token': '1234567829847834783478'
     			}
 
@@ -85,10 +98,12 @@ lobster.component("authComp", {
 
 
     		$http.jsonp(getStr).then(function(response) {
-    				console.log(response);
+    				console.log(response.data);
     			});
+
     			
     		}
+
 
 
 
