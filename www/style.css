@@ -1,0 +1,133 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+html{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+#search {
+	height: 100%;
+	background: url('images/bg.png') no-repeat,
+	rgba(181,181,181,0.58);
+	background-size: cover;
+	position: relative;
+}
+#top-but {
+	display: flex;
+	display: -webkit-flex;
+	justify-content: center;
+    width: 100%;
+    position: absolute;
+    top: 3%;
+}
+#top-but > a {
+	width: 17.5%;
+}
+#top-but > a:first-child{
+	margin-right: 16.2%;
+}
+#top-but > a > img {
+	width: 100%;
+	height: auto;
+}
+#planet-wrap {
+	/*
+	display: flex;
+	display: -webkit-flex;
+	justify-content: center;
+	*/
+	
+	position: absolute;
+	top: 29.6%;
+	width: 100%;
+}
+#planet-wrap .in-center {
+	width: 160px;
+	height: 160px;
+	overflow: hidden;
+	border-radius: 80px;
+	position: relative;
+	margin: 0 auto;
+	overflow-x: hidden;
+    overflow-y: hidden;
+    -webkit-border-radius: 80px;
+}
+#planet-wrap .earth {
+	height: 100%;
+	opacity: 0.4;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	-webkit-overflow: hidden;
+	border-radius: 80px;
+	-webkit-border-radius: 80px;
+}
+#planet-wrap .earth img {
+	height: 100%;
+	display: block;
+	
+}
+#planet-wrap .ava {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+#planet-wrap .ava img {
+	max-width: 100%;
+}
+
+/*
+@-webkit-keyframes crawl {
+	0%	{ -webkit-transform: translateX(0%); }
+	100% { -webkit-transform: translateX(-180%); }
+}
+*/
+@-webkit-keyframes crawl {
+	0%	{ left: 0; }
+	100% { left: -240%; }
+}
+
+
+#planet-wrap .earth .wrap {
+	-webkit-animation: crawl 20s;
+	height: 100%;
+	position: relative;
+    z-index: 1;
+}
+
+#planet-wrap .text {
+	font-size: 14px;
+	font-family: 'Roboto', sans-serif;
+	color: #373636;
+	text-align: center;
+	margin-top: 4%;
+}
+#buttons {
+	position: absolute;
+	bottom: 5%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+#buttons > a {
+	width: 18.8%;
+	margin-right: 8%;
+}
+#buttons > a:last-child {
+	margin-right: 0;
+}
+#buttons > a > img {
+	width: 100%;
+	height: auto;
+}

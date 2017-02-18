@@ -1,16 +1,6 @@
 var lobster = angular.module("lobster-app", ['ngRoute']);
 
-lobster.config(function($routeProvider){
-	$routeProvider.when('/auth',
-        {
-            template:'<auth-comp></auth-comp>',
-        });
-	$routeProvider.when('/h',
-	{
-            template:'<h4>ddddd</h4>',
-            controller:'lobsterCtrl'
-	});
-});
+
 
 
 lobster.config(function($sceDelegateProvider) {
