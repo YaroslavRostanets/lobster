@@ -24,6 +24,14 @@ lobster.config(function($sceDelegateProvider) {
 lobster.controller("lobsterCtrl",function($scope, myFactory){
 	$scope.myFactory = myFactory;
 
+        setTimeout(function(){
+            if( window.localStorage.getItem("vk_access_token") !== null ){
+                window.location.hash = "#!/search";
+            } else {
+                window.location.hash = "#!/auth";
+            }
+        },3000);
+
 	
 });
 
@@ -53,33 +61,37 @@ lobster.component("authComp", {
 						}
 						window.localStorage.setItem("vk_access_token", outData[0]);
 						window.localStorage.setItem("vk_expires_in", outData[1]);
-						window.localStorage.setItem("vk_user_id", outData[2]);	
-						
-    				uri.close();
+						window.localStorage.setItem("vk_user_id", outData[2]);
+						window.localStorage.setItem("email", outData[3]);
+
+                        $scope.userId = window.localStorage.getItem("vk_user_id");
+                        $scope.token = window.localStorage.getItem("vk_access_token");
+                        $scope.vk_expires_in = window.localStorage.getItem("vk_expires_in");
+                        $scope.email = window.localStorage.getItem("email");
+    					uri.close();
+
+                        var getParams = {
+                            'vk_user_id': $scope.userId,
+                            'vk_access_token': $scope.token,
+                            'email': $scope.email
+                        }
+
+                        var getStr = lobsterUrl + '/auth/?';  // lobsterUrl = 'http://rostanets.zzz.com.ua/application'
+                        for( var key in getParams ){
+                            getStr += key + '=' + getParams[key] + '&';
+                        }
+
+
+                        $http.jsonp(getStr).then(function(response) {
+                            alert(response.data.status);
+                            window.location.hash = "#!/search";
+                        });
+
     			}
     		});
-    			$scope.userId = window.localStorage.getItem("vk_user_id");
-    			$scope.token = window.localStorage.getItem("vk_access_token");
-    			$scope.vk_expires_in = window.localStorage.getItem("vk_expires_in");
 
-    			var getParams = {
-    				'vk_user_id': $scope.userId,
-    				'vk_access_token': $scope.token
-    			}
-    			var getStr ='';
-    			for( var key in getParams ){
-    				getStr += key + '=' + getParams[key] + '&';
-    			}
-
-
-    			$http.jsonp({
-    				method: 'GET', 
-    				url: lobsterUrl + '/auth/?' + getStr})
-    				.success(function(data) {
-    					alert(data);
-    				});
     			
-    		}
+    		},
 
     	$scope.authTest = function(){
     		var getParams = {
