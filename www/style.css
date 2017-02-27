@@ -131,3 +131,7 @@ body {
 	width: 100%;
 	height: auto;
 }
+
+#top-but .avatar {
+	position: absolute;
+}

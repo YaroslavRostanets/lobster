@@ -1,5 +1,18 @@
 var lobster = angular.module("lobster-app", ['ngRoute']);
 
+lobster.config(function($routeProvider){
+	$routeProvider.when('/auth',
+        {
+            template:'<auth-comp></auth-comp>',
+        });
+	$routeProvider.when('/h',
+	{
+            template:'<h4>ddddd</h4>',
+            controller:'lobsterCtrl'
+	});
+});
+
+
 lobster.config(function($sceDelegateProvider) {
 	$sceDelegateProvider.resourceUrlWhitelist([    // Allow same origin resource loads.
     'self',
@@ -18,7 +31,7 @@ lobster.component("authComp", {
 	template: "<h4>Шаблон страницы авторизации</h4><a href='javascript:void(0)' ng-click='auth();'>Авторизация ВК</a>" + 
 				'<div><a href="#" ng-click="myFactory.logout();">logout</a></div>' + 
 				'<p>token - {{token}}</p><p>userId - {{userId}}</p>' + 
-				'<a href="javascript:void(0)" ng-click="authTest();"> SERVER TEST </a>',
+				'<a href="#" ng-click="authTest();"> SERVER TEST </a>',
 
 	controller: function($scope, myFactory, $http, $sce){
 		$scope.myFactory = myFactory;
@@ -40,8 +53,7 @@ lobster.component("authComp", {
 						}
 						window.localStorage.setItem("vk_access_token", outData[0]);
 						window.localStorage.setItem("vk_expires_in", outData[1]);
-						window.localStorage.setItem("vk_user_id", outData[2]);
-						window.localStorage.setItem("email", outData[3]);
+						window.localStorage.setItem("vk_user_id", outData[2]);	
 						
     				uri.close();
     			}
@@ -49,11 +61,6 @@ lobster.component("authComp", {
     			$scope.userId = window.localStorage.getItem("vk_user_id");
     			$scope.token = window.localStorage.getItem("vk_access_token");
     			$scope.vk_expires_in = window.localStorage.getItem("vk_expires_in");
-            	$scope.email = window.localStorage.getItem("email");
-            	alert($scope.userId);
-            	alert($scope.token);
-            	alert($scope.vk_expires_in);
-            	alert($scope.email);
 
     			var getParams = {
     				'vk_user_id': $scope.userId,
@@ -76,7 +83,7 @@ lobster.component("authComp", {
 
     	$scope.authTest = function(){
     		var getParams = {
-    				'vk_user_id': '84',
+    				'vk_user_id': '676767',
     				'vk_access_token': '1234567829847834783478'
     			}
 
@@ -88,12 +95,10 @@ lobster.component("authComp", {
 
 
     		$http.jsonp(getStr).then(function(response) {
-    				console.log(response.data);
+    				console.log(response);
     			});
-
     			
     		}
-
 
 
 
