@@ -40,10 +40,18 @@ lobster.component("planetSearch",{
                             $interval.cancel(touchStart);
 
                         gesuredZone.addEventListener('touchstart', function(event) {
-                            console.log(event);
                             touchstartX = event.changedTouches[0].pageX;
                             touchstartY = event.changedTouches[0].pageY;
                             console.log('touchstart');
+                        }, false);
+
+                        /*
+                        * touchend и touchcancel - одна и та же фигня
+                        */
+                        gesuredZone.addEventListener('touchcancel', function(event) {
+                            touchendX = event.changedTouches[0].pageX;
+                            touchendY = event.changedTouches[0].pageY;
+                            handleGesure();
                         }, false);
 
                         gesuredZone.addEventListener('touchend', function(event) {
@@ -52,12 +60,17 @@ lobster.component("planetSearch",{
                             handleGesure();
                         }, false);
 
+                        /*--------------------------------*/
+
                         function handleGesure() {
                             var swiped = 'swiped: ';
+                            console.log('---touchend: ' + touchendX);
+                            console.log('---touchstart:' + touchstartX);
                             if (touchendX < touchstartX) {
-                                console.log(swiped + 'left!');
+                                $scope.leftSwipe();
                             }
                             if (touchendX > touchstartX) {
+                                $scope.rightSwipe();
                                 console.log(swiped + 'right!');
                             }
                             if (touchendY < touchstartY) {
@@ -71,46 +84,25 @@ lobster.component("planetSearch",{
                             }
                         };
 
-
-
-
                     }
                 },100);
 
-
-
-
-
             }
 
-/*
+            $scope.rightSwipe = function(){
+              //console.log($scope.data);
+              $scope.disLikeArr.push( $scope.data.pop() ); //В массив дизлайков пушим обьект человека =)
+                console.log($scope.data);
+              $scope.$apply();
+            };
+
+            $scope.leftSwipe = function() {
+                $scope.data.push( $scope.disLikeArr.pop() );
+                console.log($scope.data);
+                $scope.$apply();
+            };
 
 
-
-
-
-
-
-
-        function handleGesure() {
-            var swiped = 'swiped: ';
-            if (touchendX < touchstartX) {
-                alert(swiped + 'left!');
-            }
-            if (touchendX > touchstartX) {
-                alert(swiped + 'right!');
-            }
-            if (touchendY < touchstartY) {
-                alert(swiped + 'down!');
-            }
-            if (touchendY > touchstartY) {
-                alert(swiped + 'left!');
-            }
-            if (touchendY == touchstartY) {
-                alert('tap!');
-            }
-        }
-*/
 
 
             $scope.data = [{
@@ -128,8 +120,10 @@ lobster.component("planetSearch",{
                 }
             ];
 
+            $scope.disLikeArr = [];
+
         document.addEventListener("backbutton", function(event){
-            navigator.app.exitApp();
+            //navigator.app.exitApp();
             event.preventDefault();
         }, false);
         //$scope.myFactory = myFactory;

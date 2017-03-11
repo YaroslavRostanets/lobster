@@ -4,6 +4,11 @@ var lobster = angular.module("lobster-app", ['ngRoute']);
 
 
 lobster.controller("lobsterCtrl",function($scope, myFactory){
+    document.addEventListener("deviceready", function(){
+        document.addEventListener("backbutton", function(event){
+            event.preventDefault();
+        }, false);
+    }, false);
 	$scope.myFactory = myFactory;
 
         setTimeout(function(){

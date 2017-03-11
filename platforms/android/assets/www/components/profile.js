@@ -108,7 +108,7 @@ lobster.component('profile',{
 
 
         noUiSlider.create(sliderRad, {
-            start: [5, 80],
+            start: [5],
             connect: true,
             range: {
                 'min': 0,
@@ -149,6 +149,25 @@ lobster.component('profile',{
                 minAge.innerHTML = Math.round(value);
             }
         });
+
+
+        document.getElementById('#user-settings').addEventListener('touchstart', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+        }, false);
+
+        document.getElementById('#user-settings').addEventListener('touchmove', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+        }, false);
+
+        document.getElementById('#user-settings').addEventListener('touchend', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+        }, false);
 
     }
 });

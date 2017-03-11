@@ -16,7 +16,7 @@ lobster.config(function($routeProvider){
 
             controller: function(){
                 document.addEventListener("backbutton", function(event){
-                    navigator.app.exitApp();
+                    //navigator.app.exitApp();
                     event.preventDefault();
                 }, false);
             }
@@ -30,7 +30,7 @@ lobster.config(function($routeProvider){
 
             controller: function($scope, myFactory, $http, $sce){
                 document.addEventListener("backbutton", function(event){
-                    navigator.app.exitApp();
+                    //navigator.app.exitApp();
                     event.preventDefault();
                 }, false);
                 $scope.myFactory = myFactory;
@@ -72,11 +72,13 @@ lobster.config(function($routeProvider){
                                 getStr += key + '=' + getParams[key] + '&';
                             }
 
-                            alert(getStr);
 
                             $http.jsonp(getStr).then(function(response) {
-                                alert(response.data.status);
-                                window.location.hash = "#!/search";
+                                if(response.data.satus = 'valid'){
+                                    alert(valid);
+                                    window.location.hash = "#!/search";
+
+                                }
                             }, function error(response){
                                 for( key in response){
                                     alert(response[key]);
@@ -89,21 +91,24 @@ lobster.config(function($routeProvider){
 
                 $scope.test = function(){
                     var getParams = {
-                        'vk_user_id': '6825516',
-                        'vk_access_token': '88b606ffb32458eee17aa5bcf06e5d7f916176ff3a8ccf3d8603c9075428758bc956b8c85b1ae7c3ea4a8',
-                        'email': 'rostanets@2c.kiev.ua'
+                        'vk_user_id': '105416658',
+                        'vk_access_token': '7c2af7394125249690fa5159fd215662d7d2c766f9868da18a8a9a828f587c012263a7ec6a07774816a12',
+                        'email': 'rostanets@gmail.com'
                     };
 
-                    var getStr = lobsterUrl + '/auth/?';  // lobsterUrl = 'http://rostanets.zzz.com.ua/application'
+                    var getStr = lobsterUrl + '/auth/?';  // lobsterUrl = 'http://rostanets.zzz.com.ua/application';
+
                     for( var key in getParams ){
                         getStr += key + '=' + getParams[key] + '&';
                     };
-
+                    console.log(getStr);
 
 
                     $http.jsonp(getStr).then(function(response) {
-                        console.log(response);
-                        window.location.hash = "#!/search";
+                        console.log(response.data.status);
+                        if(response.data.status){
+                            window.location.hash = "#!/search";
+                        }
                     }, function error(response){
                         alert(response.satus);
                     });
@@ -138,14 +143,16 @@ lobster.config(function($routeProvider){
 						'</div>' +
 					'</div>',
 
-            controller:'lobsterCtrl'
 	});
 
 	$routeProvider.when('/profile',{
 	    template: '<profile></profile>',
 
         controller: function($scope){
-
+            addEventListener('backbutton', function (event) {
+                event.preventDefault();
+                alert('ss');
+            },false);
         }
     });
 });

@@ -8,4 +8,8 @@ var authConfig = {
     'scope':'friends,audio,video,email,offline',
     'response_type':'token',
     'v':'5.52'
-    }
+    };
+
+
+
+
