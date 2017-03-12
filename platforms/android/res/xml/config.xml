@@ -13,12 +13,12 @@
     <feature name="InAppBrowser">
         <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
     </feature>
-    <name>lobster</name>
+    <name>Lobster</name>
     <description>
         A blank PhoneGap app.
     </description>
     <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+        Circle Team
     </author>
     <content src="index.html" />
     <access origin="*" />

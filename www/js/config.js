@@ -10,6 +10,11 @@ var authConfig = {
     'v':'5.52'
     };
 
+if(localStorage.getItem("minAge") == null){
+  localStorage.setItem("minAge", 18);
+}
 
-
+if(localStorage.getItem("maxAge") == null){
+    localStorage.setItem("maxAge", 65);
+}
 

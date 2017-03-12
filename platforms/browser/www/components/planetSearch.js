@@ -19,14 +19,25 @@ lobster.component("planetSearch",{
                    '</div>' +
                     '<div id="people-cont" ng-if="!showPlanet">' +
                         '<div ng-repeat="person in data" class="one-tile">' +
-                            '<img ng-src="{{person.photoUrl}}" alt="image">' +
+                            '<img ng-src="{{person.ava_url}}" alt="image">' +
                             '<div class="bottom-description">' +
-                                '<span class="name">{{person.name}}</span>, {{person.age}}' +
+                                '<span class="name">{{person["first_name"]}}</span>,{{person.age}}' +
                             '</div>' +
                         '</div>' +
                     '</div>',
 
     controller: function($http, $scope, myFactory, $interval){
+
+        var timer = $interval(function () {
+            console.log($scope.showPlanet);
+            $scope.showPlanet = myFactory.getShowSearch();
+            if($scope.showPlanet == false){
+                $interval.cancel(timer);
+                touchStart();
+            }
+            console.log($scope.showPlanet);
+        }, 3000);
+
             function touchStart(){
 
                 var touchstartX = 0;
@@ -42,17 +53,12 @@ lobster.component("planetSearch",{
                         gesuredZone.addEventListener('touchstart', function(event) {
                             touchstartX = event.changedTouches[0].pageX;
                             touchstartY = event.changedTouches[0].pageY;
-                            console.log('touchstart');
+                            $scope.photoMove();
                         }, false);
 
                         /*
                         * touchend и touchcancel - одна и та же фигня
                         */
-                        gesuredZone.addEventListener('touchcancel', function(event) {
-                            touchendX = event.changedTouches[0].pageX;
-                            touchendY = event.changedTouches[0].pageY;
-                            handleGesure();
-                        }, false);
 
                         gesuredZone.addEventListener('touchend', function(event) {
                             touchendX = event.changedTouches[0].pageX;
@@ -60,27 +66,23 @@ lobster.component("planetSearch",{
                             handleGesure();
                         }, false);
 
+
                         /*--------------------------------*/
 
+
+
                         function handleGesure() {
-                            var swiped = 'swiped: ';
-                            console.log('---touchend: ' + touchendX);
-                            console.log('---touchstart:' + touchstartX);
+                            $scope.photoMove();
                             if (touchendX < touchstartX) {
+                                var el = document.getElementById('people-cont').lastElementChild;
+                                    el.style['-webkit-transform'] = 'translate(0px,0px)';
                                 $scope.leftSwipe();
                             }
                             if (touchendX > touchstartX) {
                                 $scope.rightSwipe();
-                                console.log(swiped + 'right!');
-                            }
-                            if (touchendY < touchstartY) {
-                                console.log(swiped + 'down!');
-                            }
-                            if (touchendY > touchstartY) {
-                                console.log(swiped + 'left!');
                             }
                             if (touchendY == touchstartY) {
-                                console.log('tap!');
+
                             }
                         };
 
@@ -90,23 +92,39 @@ lobster.component("planetSearch",{
             }
 
             $scope.rightSwipe = function(){
-              //console.log($scope.data);
+                if($scope.data.length <= 10){
+                    $scope.getPeople();
+                };
               $scope.disLikeArr.push( $scope.data.pop() ); //В массив дизлайков пушим обьект человека =)
-                console.log($scope.data);
               $scope.$apply();
             };
 
             $scope.leftSwipe = function() {
                 $scope.data.push( $scope.disLikeArr.pop() );
-                console.log($scope.data);
                 $scope.$apply();
+            };
+
+            $scope.photoMove = function(){
+                var startX, startY;
+                var el = document.getElementById('people-cont').lastElementChild;
+                    el.addEventListener('touchmove',function(event){
+                        event.preventDefault();
+                        if(startX == undefined){
+                            startX = event.changedTouches[0].pageX;
+                            startY = event.changedTouches[0].pageY;
+                        } else {
+                            var result = 'translate(' + (event.changedTouches[0].pageX - startX) + 'px' + ','
+                                                      + (event.changedTouches[0].pageY - startY) + 'px' + ')';
+                                el.style['-webkit-transform'] = result;
+                        }
+                    }, false);
             };
 
 
 
 
             $scope.data = [{
-                "name": "Ярослав",
+                "first_name": "Ярослав",
                 "age": "24",
                 "photoUrl": "images/pictures/user-ava.jpg"
             }, {
@@ -130,15 +148,6 @@ lobster.component("planetSearch",{
 
         $scope.showPlanet = myFactory.getShowSearch();
 
-        var timer = $interval(function () {
-            console.log($scope.showPlanet);
-            $scope.showPlanet = myFactory.getShowSearch();
-            if($scope.showPlanet == false){
-                $interval.cancel(timer);
-                touchStart();
-            }
-            console.log($scope.showPlanet);
-        }, 3000);
 
         var options = { maximumAge: 3000,
                         timeout: 8000,
@@ -172,6 +181,39 @@ lobster.component("planetSearch",{
 
         navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 
+        $scope.peopleCounter = 0;
+
+        $scope.getPeople = function(){
+            console.log('getPeople');
+            var url = lobsterUrl + '/getpeople/?';
+            var config = {
+                "minAge": localStorage.getItem("minAge"),
+                "maxAge": localStorage.getItem("maxAge"),
+                "minLat": "0",
+                "maxLat": "0",
+                "minLon": "0",
+                "maxLon": "0",
+                "sex": localStorage.getItem("sexSearch"),
+                "limit": $scope.peopleCounter
+            };
+
+            for ( var key in config ){
+                url += key + '=' + config[key] + '&';
+            }
+
+            console.log(url);
+            $scope.peopleCounter += 10;
+
+            $http.jsonp(url).then(function(response) {
+                console.log(response.data);
+                $scope.data = $scope.data.concat(response.data);
+                console.log($scope.data);
+            }, function error(response){
+                console.log(response);
+            });
+
+
+        }
 
     }
 });
