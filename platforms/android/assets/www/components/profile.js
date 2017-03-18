@@ -146,35 +146,6 @@ lobster.component('profile',{
 
 
         });
-/*
-        sliderRad.addEventListener('touchstart', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }, false);
-        sliderRad.addEventListener('touchmove', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }, false);
-        sliderRad.addEventListener('touchend', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }, false);
-
-        sliderAge.addEventListener('touchstart', function(event) {
-            //event.preventDefault();
-            event.stopPropagation();
-        }, false);
-
-        sliderAge.addEventListener('touchmove', function(event) {
-            //event.preventDefault();
-            event.stopPropagation();
-        }, false);
-
-        sliderAge.addEventListener('touchend', function(event) {
-            //event.preventDefault();
-            event.stopPropagation();
-        }, false);
-        */
 
         /*-- localStorage --*/
         var radioOn = window.localStorage.getItem('sexSearch');

@@ -48,6 +48,14 @@ module.exports = [
             "cordova.InAppBrowser.open",
             "window.open"
         ]
+    },
+    {
+        "id": "cordova-plugin-device.device",
+        "file": "plugins/cordova-plugin-device/www/device.js",
+        "pluginId": "cordova-plugin-device",
+        "clobbers": [
+            "device"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -56,7 +64,9 @@ module.exports.metadata =
     "org.apache.cordova.geolocation": "0.3.6",
     "cl.rmd.cordova.dialoggps": "0.0.2",
     "cordova-plugin-whitelist": "1.3.1",
-    "cordova-plugin-inappbrowser": "1.6.1"
-}
+    "cordova-plugin-inappbrowser": "1.6.1",
+    "cordova-plugin-crosswalk-webview": "2.1.0",
+    "cordova-plugin-device": "1.1.5"
+};
 // BOTTOM OF METADATA
 });

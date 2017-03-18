@@ -5,9 +5,7 @@ lobster.component("planetSearch",{
         template: '<div id="planet-wrap" ng-if="showPlanet">' +
                     '<div class="in-center">' +
                         '<div class="earth">' +
-                            '<div class="wrap">' +
                                 '<img src="images/earth.png" alt="img">' +
-                            '</div>' +
                         '</div>' +
                         '<div class="ava">' +
                             '<img src="images/pictures/ava.jpg" alt="img">' +
@@ -18,8 +16,8 @@ lobster.component("planetSearch",{
                     '</div>' +
                    '</div>' +
                     '<div id="people-cont" ng-if="!showPlanet">' +
-                        '<div ng-repeat="person in data" class="one-tile">' +
-                            '<img ng-src="{{person.ava_url}}" alt="image">' +
+                        '<div ng-repeat="person in showArr" class="one-tile">' +
+                            '<img ng-src="{{person.ava_url}}" src={{person.ava_url}} alt="image">' +
                             '<div class="bottom-description">' +
                                 '<span class="name">{{person["first_name"]}}</span>,{{person.age}}' +
                             '</div>' +
@@ -27,9 +25,14 @@ lobster.component("planetSearch",{
                     '</div>',
 
     controller: function($http, $scope, myFactory, $interval){
+        document.addEventListener("backbutton", function(event){
+            //navigator.app.exitApp();
+            event.preventDefault();
+        }, false);
+
+        $scope.showPlanet = myFactory.getShowSearch();
 
         var timer = $interval(function () {
-            console.log($scope.showPlanet);
             $scope.showPlanet = myFactory.getShowSearch();
             if($scope.showPlanet == false){
                 $interval.cancel(timer);
@@ -40,67 +43,74 @@ lobster.component("planetSearch",{
 
             function touchStart(){
 
-                var touchstartX = 0;
-                var touchstartY = 0;
-                var touchendX = 0;
-                var touchendY = 0;
-
-                var touchStart = $interval(function(){
+                var touchStartInt = $interval(function(){
                     if(document.getElementById('people-cont') != null){
-                        var gesuredZone = document.getElementById('people-cont');
-                            $interval.cancel(touchStart);
-
-                        gesuredZone.addEventListener('touchstart', function(event) {
-                            touchstartX = event.changedTouches[0].pageX;
-                            touchstartY = event.changedTouches[0].pageY;
-                            $scope.photoMove();
-                        }, false);
-
-                        /*
-                        * touchend и touchcancel - одна и та же фигня
-                        */
-
-                        gesuredZone.addEventListener('touchend', function(event) {
-                            touchendX = event.changedTouches[0].pageX;
-                            touchendY = event.changedTouches[0].pageY;
-                            handleGesure();
-                        }, false);
-
-
-                        /*--------------------------------*/
-
-
-
-                        function handleGesure() {
-                            $scope.photoMove();
-                            if (touchendX < touchstartX) {
-                                var el = document.getElementById('people-cont').lastElementChild;
-                                    el.style['-webkit-transform'] = 'translate(0px,0px)';
-                                $scope.leftSwipe();
-                            }
-                            if (touchendX > touchstartX) {
-                                $scope.rightSwipe();
-                            }
-                            if (touchendY == touchstartY) {
-
-                            }
-                        };
-
+                            $interval.cancel(touchStartInt);
+                            go();
                     }
                 },100);
 
+                function go(){
+                    var touchZone = document.getElementById('people-cont');
+
+                    var touchstartX = 0;
+                    var touchstartY = 0;
+                    var touchendX = 0;
+                    var touchendY = 0;
+
+                    touchZone.addEventListener('touchstart', function(event) {
+                        event.preventDefault();
+                        console.log('touchstart: ' + touchstartX);
+                        touchstartX = event.changedTouches[0].pageX;
+                        touchstartY = event.changedTouches[0].pageY;
+                    }, false);
+
+                    touchZone.addEventListener('touchend', function(event) {
+                        event.preventDefault();
+                        touchendX = event.changedTouches[0].pageX;
+                        touchendY = event.changedTouches[0].pageY;
+                        handleTouch();
+                    }, false);
+
+                    touchZone.addEventListener('touchmove', function(event) {
+                        event.preventDefault();
+                        var positionX = event.changedTouches[0].clientX;
+                        //console.log(startX);
+                        var El = document.getElementById('people-cont').lastElementChild;
+                        var difference = positionX - touchstartX;
+                            El.style.left = difference + 'px';
+                            El.style.top = -difference/4 + 'px';
+                            El.style['-webkit-transform'] = 'rotate(' + difference/20 + 'deg)';
+                    }, false);
+
+                    function handleTouch() {
+                        var swiped = 'swiped: ';
+                        if (touchendX < touchstartX) {
+                            alert(swiped + 'left!');
+                        }
+                        if (touchendX > touchstartX) {
+                            //alert(swiped + 'right!');
+                            $scope.getPeople();
+                            $scope.rightSwipe();
+                            $scope.showArr.unshift($scope.data.shift());
+                        }
+                        if (touchendY == touchstartY) {
+                            alert('tap!');
+                        }
+                    }
+                }
             }
 
+
+
             $scope.rightSwipe = function(){
-                if($scope.data.length <= 10){
-                    $scope.getPeople();
-                };
-              $scope.disLikeArr.push( $scope.data.pop() ); //В массив дизлайков пушим обьект человека =)
-              $scope.$apply();
+                $scope.showArr.pop();
+                var lastEl = document.getElementById('people-cont').lastElementChild;
+                    //lastEl.classList.add("hide-anim");
+                $scope.$apply();
             };
 
             $scope.leftSwipe = function() {
-                $scope.data.push( $scope.disLikeArr.pop() );
                 $scope.$apply();
             };
 
@@ -120,33 +130,34 @@ lobster.component("planetSearch",{
                     }, false);
             };
 
-
+            $scope.showArr = [{
+                "first_name": "Ярослав",
+                "age": "24",
+                "ava_url": "https://pp.vk.me/c9712/u28159319/-6/z_2d468e66.jpg"},
+                {
+                    "first_name": "Серафим",
+                    "age": "24",
+                    "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
+                }];
 
 
             $scope.data = [{
                 "first_name": "Ярослав",
                 "age": "24",
-                "photoUrl": "images/pictures/user-ava.jpg"
-            }, {
-                "name": "Женевия",
-                "age": "18",
-                "photoUrl": "images/pictures/user-ava3.jpg"
-            }, {
-                "name": "Ярослава",
-                "age": "18",
-                "photoUrl": "images/pictures/user-ava2.jpg"
-                }
-            ];
+                "ava_url": "images/pictures/user-ava.jpg"
+            },
+                {
+                    "first_name": "Серафим",
+                    "age": "24",
+                    "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
+                },
+                {
+                    "first_name": "Анна",
+                    "age": "24",
+                    "ava_url": "images/pictures/user-ava3.jpg"
+                }];
 
             $scope.disLikeArr = [];
-
-        document.addEventListener("backbutton", function(event){
-            //navigator.app.exitApp();
-            event.preventDefault();
-        }, false);
-        //$scope.myFactory = myFactory;
-
-        $scope.showPlanet = myFactory.getShowSearch();
 
 
         var options = { maximumAge: 3000,
@@ -201,12 +212,12 @@ lobster.component("planetSearch",{
                 url += key + '=' + config[key] + '&';
             }
 
-            console.log(url);
-            $scope.peopleCounter += 10;
-
             $http.jsonp(url).then(function(response) {
                 console.log(response.data);
-                $scope.data = $scope.data.concat(response.data);
+                if($scope.data.length < 10){
+                    $scope.data = $scope.data.concat(response.data);
+                }
+                //$scope.data = $scope.data.concat(response.data);
                 console.log($scope.data);
             }, function error(response){
                 console.log(response);

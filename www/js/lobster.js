@@ -1,4 +1,4 @@
-var lobster = angular.module("lobster-app", ['ngRoute']);
+var lobster = angular.module("lobster-app", ['ngRoute','ngAnimate']);
 
 
 

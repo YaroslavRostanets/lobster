@@ -3,7 +3,11 @@
 lobster.config(function($sceDelegateProvider) {
     $sceDelegateProvider.resourceUrlWhitelist([    // Allow same origin resource loads.
         'self',
-        'http://rostanets.zzz.com.ua/**'
+        'http://rostanets.zzz.com.ua/**',
+        'http://vk.com/**',
+        'https://vk.com/**',
+        'https://pp.vk.me/**',
+        'http://pp.vk.me/**'
     ]);
 });
 
@@ -11,22 +15,69 @@ lobster.config(function($sceDelegateProvider) {
 lobster.config(function($routeProvider){
     $routeProvider.when('/',
         {
-            template:'<h3 style="text-align: center; margin-top: 50px; margin-bottom: 50px;">I love u, creator</h3>' +
-				'<a href="javascript:void(0);" onclick="window.localStorage.clear();">Очистить Storage</a>',
+            template:'<div id="load">' +
+                        '<div id="big-logo">' +
+                            '<img src="images/big_logo.png" alt="logo">' +
+                        '</div>' +
+                     '</div>',
 
             controller: function(){
                 document.addEventListener("backbutton", function(event){
                     //navigator.app.exitApp();
                     event.preventDefault();
+                    alert(device.version);
+
+                    function getAndroidVersion(ua) {
+                        ua = (ua || navigator.userAgent).toLowerCase();
+                        var match = ua.match(/android\s([0-9\.]*)/);
+                        return match ? match[1] : false;
+                    };
+
+                    getAndroidVersion(); //"4.2.1"
+                    alert(getAndroidVersion());
+                    parseInt(getAndroidVersion(), 10); //4
+                    parseFloat(getAndroidVersion()); //4.2
+
                 }, false);
             }
         });
 	$routeProvider.when('/auth',
         {
+            template: '<div id="auth-cont">' +
+                        '<div id="auth-cont-in">' +
+                            '<div id="pager">' +
+                                '<a href="#" class="active"></a>' +
+                                 '<a href="#"></a>' +
+                                '<a href="#"></a>' +
+                            '</div>' +
+                            '<div id="slider-center">' +
+                                '<div id="logo-cont">' +
+                                    '<img src="images/big_logo.png" alt="logo">' +
+                                    '<span ng-click="test();" style="font-size: 25px; color: #1A6886; margin-left: 15px;">Lobster</span>' +
+                                '</div>' +
+                                '<div id="slider">' +
+                                    '<div class="one-slide active" data-style="blue">' +
+                                        '<img src="images/slider/slide1.jpg" alt="image">' +
+                                    '</div>' +
+                                    '<div class="one-slide" data-style="purple">' +
+                                        '<img src="images/slider/slide2.jpg" alt="image">' +
+                                    '</div>' +
+                                    '<div class="one-slide" data-style="dark-blue">' +
+                                        '<img src="images/slider/slide3.jpg" alt="image">' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div id="vk-cont">' +
+                                    '<a href="#" ng-click="auth();" id="vk-link"><span>Войти через <span>Вконтакте</span></span></a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                     '</div>',
+            /*
         	template: "<h4>Шаблон страницы авторизации</h4><a href='javascript:void(0)' ng-click='auth();'>Авторизация ВК</a>" +
             '<div><a href="#" ng-click="myFactory.logout();">logout</a></div>' +
             '<p>token - {{token}}</p><p>userId - {{userId}}</p>' +
             '<a href="javascript:void(0)" ng-click="test();"> SERVER TEST </a>',
+            */
 
             controller: function($scope, myFactory, $http, $sce){
                 document.addEventListener("backbutton", function(event){
@@ -34,6 +85,29 @@ lobster.config(function($routeProvider){
                     event.preventDefault();
                 }, false);
                 $scope.myFactory = myFactory;
+
+                $(document).ready(function(){
+                    var slideImg = $('#slider .one-slide img');
+                    var slides = $('#slider .one-slide');
+                    var skinArr = [];
+                    var counter = 0;
+                    for(var i = 0 ; i < slides.length; i++ ){
+                        skinArr.push(slides.eq(i).attr("data-style"));
+                    }
+
+                    var timerId = setInterval(function() {
+                        if(counter != 2){
+                            counter ++;
+                        } else {
+                            counter = 0;
+                        }
+                        $('#pager > a, #slider .one-slide').removeClass('active');
+                        $('#slider .one-slide').eq(counter).addClass('active');
+                        $('#pager > a').eq(counter).addClass('active');
+                        $('#auth-cont').removeClass();
+                        $('#auth-cont').addClass(skinArr[counter]);
+                    }, 3000);
+                });
 
                 $scope.auth = function(){
 
