@@ -72,12 +72,6 @@ lobster.config(function($routeProvider){
                             '</div>' +
                         '</div>' +
                      '</div>',
-            /*
-        	template: "<h4>Шаблон страницы авторизации</h4><a href='javascript:void(0)' ng-click='auth();'>Авторизация ВК</a>" +
-            '<div><a href="#" ng-click="myFactory.logout();">logout</a></div>' +
-            '<p>token - {{token}}</p><p>userId - {{userId}}</p>' +
-            '<a href="javascript:void(0)" ng-click="test();"> SERVER TEST </a>',
-            */
 
             controller: function($scope, myFactory, $http, $sce){
                 document.addEventListener("backbutton", function(event){
