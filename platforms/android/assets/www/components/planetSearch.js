@@ -30,6 +30,56 @@ lobster.component("planetSearch",{
             event.preventDefault();
         }, false);
 
+        $scope.peopleCounter = 0;
+
+        $scope.showArr = [{
+            "first_name": "Ярослав",
+            "age": "24",
+            "ava_url": "https://pp.vk.me/c9712/u28159319/-6/z_2d468e66.jpg"},
+            {
+                "first_name": "Серафим",
+                "age": "24",
+                "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
+            }];
+
+        $scope.data = [];
+
+
+        $scope.disLikeArr = [];
+
+        $scope.getPeople = function(){
+            console.log('getPeople');
+            var url = lobsterUrl + '/getpeople/?';
+            var config = {
+                "minAge": localStorage.getItem("minAge"),
+                "maxAge": localStorage.getItem("maxAge"),
+                "minLat": "0",
+                "maxLat": "0",
+                "minLon": "0",
+                "maxLon": "0",
+                "sex": localStorage.getItem("sexSearch"),
+                "limit": $scope.peopleCounter
+            };
+
+            for ( var key in config ){
+                url += key + '=' + config[key] + '&';
+            }
+            console.log($scope.data.length);
+            if($scope.data.length < 10){
+                console.log('<<<<');
+                $http.jsonp(url).then(function(response) {
+                    console.log(url);
+                    $scope.data = $scope.data.concat(response.data);
+                    console.log($scope.data);
+                }, function error(response){
+                    console.log(response);
+                });
+            }
+
+        };
+
+        $scope.getPeople();
+
         $scope.showPlanet = myFactory.getShowSearch();
 
         var timer = $interval(function () {
@@ -86,13 +136,13 @@ lobster.component("planetSearch",{
                     function handleTouch() {
                         var swiped = 'swiped: ';
                         if (touchendX < touchstartX) {
-                            alert(swiped + 'left!');
+
                         }
                         if (touchendX > touchstartX) {
-                            //alert(swiped + 'right!');
                             $scope.getPeople();
                             $scope.rightSwipe();
                             $scope.showArr.unshift($scope.data.shift());
+                            console.log($scope.data);
                         }
                         if (touchendY == touchstartY) {
                             alert('tap!');
@@ -106,7 +156,7 @@ lobster.component("planetSearch",{
             $scope.rightSwipe = function(){
                 $scope.showArr.pop();
                 var lastEl = document.getElementById('people-cont').lastElementChild;
-                    //lastEl.classList.add("hide-anim");
+                    lastEl.classList.add("hide-anim");
                 $scope.$apply();
             };
 
@@ -130,36 +180,6 @@ lobster.component("planetSearch",{
                     }, false);
             };
 
-            $scope.showArr = [{
-                "first_name": "Ярослав",
-                "age": "24",
-                "ava_url": "https://pp.vk.me/c9712/u28159319/-6/z_2d468e66.jpg"},
-                {
-                    "first_name": "Серафим",
-                    "age": "24",
-                    "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
-                }];
-
-
-            $scope.data = [{
-                "first_name": "Ярослав",
-                "age": "24",
-                "ava_url": "images/pictures/user-ava.jpg"
-            },
-                {
-                    "first_name": "Серафим",
-                    "age": "24",
-                    "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
-                },
-                {
-                    "first_name": "Анна",
-                    "age": "24",
-                    "ava_url": "images/pictures/user-ava3.jpg"
-                }];
-
-            $scope.disLikeArr = [];
-
-
         var options = { maximumAge: 3000,
                         timeout: 8000,
                         enableHighAccuracy: false };
@@ -179,7 +199,6 @@ lobster.component("planetSearch",{
         function onError(error) {
             var getStr = lobsterUrl + '/geolocation/';
             $http.jsonp(getStr).then(function(response) {
-                console.log(response.data);
                 sessionStorage.setItem('latitude', response.data.lat);
                 sessionStorage.setItem('longitude', response.data.lon);
                 /*
@@ -192,39 +211,6 @@ lobster.component("planetSearch",{
 
         navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 
-        $scope.peopleCounter = 0;
-
-        $scope.getPeople = function(){
-            console.log('getPeople');
-            var url = lobsterUrl + '/getpeople/?';
-            var config = {
-                "minAge": localStorage.getItem("minAge"),
-                "maxAge": localStorage.getItem("maxAge"),
-                "minLat": "0",
-                "maxLat": "0",
-                "minLon": "0",
-                "maxLon": "0",
-                "sex": localStorage.getItem("sexSearch"),
-                "limit": $scope.peopleCounter
-            };
-
-            for ( var key in config ){
-                url += key + '=' + config[key] + '&';
-            }
-
-            $http.jsonp(url).then(function(response) {
-                console.log(response.data);
-                if($scope.data.length < 10){
-                    $scope.data = $scope.data.concat(response.data);
-                }
-                //$scope.data = $scope.data.concat(response.data);
-                console.log($scope.data);
-            }, function error(response){
-                console.log(response);
-            });
-
-
-        }
 
     }
 });

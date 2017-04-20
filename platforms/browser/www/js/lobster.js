@@ -17,7 +17,7 @@ lobster.controller("lobsterCtrl",function($scope, myFactory){
             } else {
                 window.location.hash = "#!/auth";
             }
-        },3000);
+        },2999);
 
 });
 
