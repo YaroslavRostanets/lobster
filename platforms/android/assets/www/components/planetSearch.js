@@ -32,6 +32,8 @@ lobster.component("planetSearch",{
 
         $scope.peopleCounter = 0;
 
+        $scope.showArr = [];
+        /*
         $scope.showArr = [{
             "first_name": "Ярослав",
             "age": "24",
@@ -41,6 +43,7 @@ lobster.component("planetSearch",{
                 "age": "24",
                 "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
             }];
+            */
 
         $scope.data = [];
 
@@ -68,9 +71,11 @@ lobster.component("planetSearch",{
             if($scope.data.length < 10){
                 console.log('<<<<');
                 $http.jsonp(url).then(function(response) {
-                    console.log(url);
                     $scope.data = $scope.data.concat(response.data);
-                    console.log($scope.data);
+                    if($scope.showArr.length < 2){
+                        $scope.showArr.push( $scope.data.pop() );
+                        $scope.showArr.push( $scope.data.pop() );
+                    }
                 }, function error(response){
                     console.log(response);
                 });
@@ -136,12 +141,12 @@ lobster.component("planetSearch",{
                     function handleTouch() {
                         var swiped = 'swiped: ';
                         if (touchendX < touchstartX) {
-
+                            $scope.getPeople();
+                            $scope.leftSwipe();
                         }
                         if (touchendX > touchstartX) {
                             $scope.getPeople();
                             $scope.rightSwipe();
-                            $scope.showArr.unshift($scope.data.shift());
                             console.log($scope.data);
                         }
                         if (touchendY == touchstartY) {
@@ -155,12 +160,17 @@ lobster.component("planetSearch",{
 
             $scope.rightSwipe = function(){
                 $scope.showArr.pop();
+                $scope.showArr.unshift($scope.data.shift());
                 var lastEl = document.getElementById('people-cont').lastElementChild;
-                    lastEl.classList.add("hide-anim");
+                    //lastEl.classList.add("hide-anim");
+                    console.log($scope.showArr);
                 $scope.$apply();
             };
 
             $scope.leftSwipe = function() {
+                $scope.showArr.pop();
+                $scope.disLikeArr.unshift($scope.data.shift());
+                console.log($scope.disLikeArr);
                 $scope.$apply();
             };
 
