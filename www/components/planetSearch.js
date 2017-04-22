@@ -22,6 +22,17 @@ lobster.component("planetSearch",{
                                 '<span class="name">{{person["first_name"]}}</span>,{{person.age}}' +
                             '</div>' +
                         '</div>' +
+                    '</div>' +
+                    '<div id="buttons">' +
+                        '<a href="javascript:void(0)" ng-click="back();">' +
+                            '<img src="images/back.png" alt="image">' +
+                        '</a>' +
+                        '<a href="javascript:void(0)" ng-click="like();">' +
+                            '<img src="images/like.png" alt="image">' +
+                        '</a>' +
+                        '<a href="javascript:void(0)" ng-click="rightSwipe();">' +
+                            '<img src="images/dislike.png" alt="image">' +
+                        '</a>' +
                     '</div>',
 
     controller: function($http, $scope, myFactory, $interval){
@@ -33,17 +44,6 @@ lobster.component("planetSearch",{
         $scope.peopleCounter = 0;
 
         $scope.showArr = [];
-        /*
-        $scope.showArr = [{
-            "first_name": "Ярослав",
-            "age": "24",
-            "ava_url": "https://pp.vk.me/c9712/u28159319/-6/z_2d468e66.jpg"},
-            {
-                "first_name": "Серафим",
-                "age": "24",
-                "ava_url": "https://pp.userapi.com/c615720/v615720516/1de26/a86KHE0n0Ow.jpg"
-            }];
-            */
 
         $scope.data = [];
 
@@ -136,6 +136,14 @@ lobster.component("planetSearch",{
                             El.style.left = difference + 'px';
                             El.style.top = -difference/4 + 'px';
                             El.style['-webkit-transform'] = 'rotate(' + difference/20 + 'deg)';
+                            console.log(difference);
+                            if(difference > 0){
+                                El.classList.remove('dislike');
+                                El.classList.add('like');
+                            } else {
+                                El.classList.remove('like');
+                                El.classList.add('dislike');
+                            }
                     }, false);
 
                     function handleTouch() {
@@ -155,7 +163,14 @@ lobster.component("planetSearch",{
                     }
                 }
             }
-
+            $scope.like = function(){
+                console.log('like');
+                var El = document.getElementById('people-cont').lastElementChild;
+                    El.classList.add('like');
+                $scope.showArr.pop();
+                $scope.showArr.unshift($scope.data.shift());
+                $scope.$apply();
+            };
 
 
             $scope.rightSwipe = function(){
@@ -168,8 +183,8 @@ lobster.component("planetSearch",{
             };
 
             $scope.leftSwipe = function() {
-                $scope.showArr.pop();
-                $scope.disLikeArr.unshift($scope.data.shift());
+                $scope.disLikeArr.push( $scope.showArr.pop() );
+                $scope.showArr.unshift($scope.data.shift());
                 console.log($scope.disLikeArr);
                 $scope.$apply();
             };

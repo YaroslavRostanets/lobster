@@ -448,6 +448,31 @@ body {
 }
 .one-tile {
 	opacity: 1;
+	position: relative;
+}
+.one-tile.like:after {
+	content: "LIKE";
+	position: absolute;
+	height: 35px;
+	padding: 0 10px;
+	color: forestgreen;
+	border: 1px solid forestgreen;
+	top: 20px;
+	left: 20px;
+	font-size: 20px;
+	line-height: 35px;
+}
+.one-tile.dislike:after {
+	content: "DISLIKE";
+	position: absolute;
+	height: 35px;
+	padding: 0 10px;
+	color: red;
+	border: 1px solid red;
+	top: 20px;
+	left: 20px;
+	font-size: 20px;
+	line-height: 35px;
 }
 .one-tile.ng-hide {
 	opacity: 0;
@@ -458,8 +483,13 @@ body {
 	opacity:1;
 	transform: translate(0,0) rotate(10deg);
 }
-.one-tile.ng-leave.ng-leave-active {
+.one-tile.ng-leave.ng-leave-active.like {
 	opacity:0;
 	transform: translate(200%,-10px) rotate(30deg) !important;
 	-webkit-transform: translate(200%,-10px) rotate(30deg) !important;
+}
+.one-tile.ng-leave.ng-leave-active.dislike {
+	opacity:0;
+	transform: translate(-200%,-10px) rotate(30deg) !important;
+	-webkit-transform: translate(-200%,-10px) rotate(30deg) !important;
 }

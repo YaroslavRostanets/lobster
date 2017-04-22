@@ -198,18 +198,7 @@ lobster.config(function($routeProvider){
 							'</a>' +
 						'</div>' +
 						'<planet-search></planet-search>' +
-						'<div id="buttons">' +
-							'<a href="javascript:void(0)">' +
-								'<img src="images/back.png" alt="image">' +
-							'</a>' +
-							'<a href="javascript:void(0)">' +
-								'<img src="images/like.png" alt="image">' +
-							'</a>' +
-							'<a href="javascript:void(0)">' +
-								'<img src="images/dislike.png" alt="image">' +
-							'</a>' +
-						'</div>' +
-					'</div>',
+					'</div>'
 
 	});
 
